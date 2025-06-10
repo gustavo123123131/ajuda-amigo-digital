@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -53,12 +52,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Custom colors for the landing page
-				'rose-baby': '#f8c8dc',
-				'gold-soft': '#d4af37',
-				'lilac': '#b19cd9',
-				'rose-gold': '#e8b4b8',
-				'burgundy': '#800020',
+				// Cores otimizadas para conteúdo adulto e vendas
+				'rose-baby': '#f472b6', // Rosa sensual
+				'gold-soft': '#d4af37', // Dourado para exclusividade
+				'passion-red': '#dc2563', // Vermelho paixão para urgência
+				'luxury-purple': '#a855f7', // Roxo luxo
+				'seductive-pink': '#ec4899', // Rosa sedutor
+				'burgundy': '#7f1d1d', // Bordô sofisticado
 			},
 			fontFamily: {
 				'playfair': ['Playfair Display', 'serif'],
@@ -109,10 +109,10 @@ export default {
 				},
 				'pulse-glow': {
 					'0%, 100%': {
-						boxShadow: '0 0 20px rgba(232, 180, 184, 0.3)'
+						boxShadow: '0 0 20px rgba(220, 38, 99, 0.4)'
 					},
 					'50%': {
-						boxShadow: '0 0 30px rgba(232, 180, 184, 0.6)'
+						boxShadow: '0 0 30px rgba(220, 38, 99, 0.7)'
 					}
 				}
 			},

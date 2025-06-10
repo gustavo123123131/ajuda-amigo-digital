@@ -140,16 +140,6 @@ const HeroSection = () => {
             </div>
           </div>
         </div>
-
-        {/* CTA */}
-        <div className="text-center mt-8 animate-fade-in">
-          <button 
-            onClick={() => document.getElementById('packages')?.scrollIntoView({ behavior: 'smooth' })}
-            className="btn-primary text-black font-semibold px-8 py-4 rounded-full text-lg hover:scale-105 transition-transform duration-300"
-          >
-            Ver Pacotes Exclusivos 💖
-          </button>
-        </div>
       </div>
 
       {/* Decorative Elements */}
