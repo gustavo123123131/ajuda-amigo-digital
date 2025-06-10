@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Package } from '../types';
 
@@ -9,33 +10,33 @@ const PackagesSection: React.FC<PackagesSectionProps> = ({ onPackageSelect }) =>
   const packages: Package[] = [
     {
       id: 1,
-      name: "Pacote 1",
-      description: "5 fotos + 7 vídeos",
+      name: "Grupo VIP",
+      description: "Acesso semanal",
       price: 17.00,
       emoji: "✨",
-      features: ["5 fotos sensuais HD", "7 vídeos exclusivos", "Conteúdo intimista"]
+      features: ["Acesso ao grupo por 1 semana", "Conteúdo exclusivo diário", "Chat direto comigo", "Fotos e vídeos sensuais"]
     },
     {
       id: 2,
-      name: "Pacote 2",
-      description: "20 fotos + 25 vídeos",
+      name: "Grupo VIP",
+      description: "Acesso mensal",
       price: 27.00,
       emoji: "✨",
-      features: ["20 fotos sensuais HD", "25 vídeos exclusivos", "Conteúdo mais íntimo"],
+      features: ["Acesso ao grupo por 1 mês", "Todo conteúdo exclusivo", "Chat direto prioritário", "Vídeos íntimos completos"],
       popular: true
     },
     {
       id: 3,
-      name: "Pacote 3",
-      description: "ACESSO VIP + CHAMADA DE VÍDEO",
+      name: "Grupo VIP",
+      description: "Acesso vitalício",
       price: 37.00,
       emoji: "✨",
-      features: ["Todo o conteúdo premium", "Chamada de vídeo privada", "Chat direto comigo", "Conteúdo personalizado"],
+      features: ["Acesso permanente ao grupo", "Todo o conteúdo premium", "Chat VIP comigo", "Conteúdo personalizado", "Prioridade total"],
       vip: true
     },
     {
       id: 4,
-      name: "Chamada Avulsa",
+      name: "Chamada Privada",
       description: "Chamada de vídeo privada",
       price: 35.00,
       emoji: "📱",
@@ -43,15 +44,22 @@ const PackagesSection: React.FC<PackagesSectionProps> = ({ onPackageSelect }) =>
     }
   ];
 
+  const handleWhatsAppCall = () => {
+    const phoneNumber = "5511999999999";
+    const message = "Olá Isabella! Quero agendar uma chamada privada 💋";
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <section id="packages" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="font-playfair text-3xl md:text-5xl font-bold text-gradient mb-4">
-            Pacotes Exclusivos
+            Grupos VIP Exclusivos
           </h2>
           <p className="font-great-vibes text-xl md:text-2xl text-rose-baby">
-            Escolha sua experiência especial
+            Escolha seu plano de acesso
           </p>
         </div>
 
@@ -72,7 +80,7 @@ const PackagesSection: React.FC<PackagesSectionProps> = ({ onPackageSelect }) =>
               
               {pkg.vip && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-rose-baby text-black px-4 py-1 rounded-full text-sm font-semibold">
-                  VIP
+                  Melhor Custo
                 </div>
               )}
 
@@ -99,10 +107,10 @@ const PackagesSection: React.FC<PackagesSectionProps> = ({ onPackageSelect }) =>
               </ul>
 
               <button
-                onClick={() => onPackageSelect(pkg)}
+                onClick={pkg.name === "Chamada Privada" ? handleWhatsAppCall : () => onPackageSelect(pkg)}
                 className="w-full btn-primary text-black font-semibold py-3 rounded-xl hover:scale-105 transition-transform duration-300"
               >
-                Comprar Agora 💖
+                {pkg.name === "Chamada Privada" ? "Agendar Agora" : "Assinar Agora"} 💖
               </button>
             </div>
           ))}

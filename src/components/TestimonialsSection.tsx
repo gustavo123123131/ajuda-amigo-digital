@@ -4,27 +4,33 @@ import React from 'react';
 const TestimonialsSection = () => {
   const testimonials = [
     {
-      initials: "M.S.",
-      city: "São Paulo",
-      text: "Conteúdo incrível, muito exclusivo e de qualidade. Recomendo!",
+      name: "Carlos M.",
+      text: "Conteúdo incrível, muito exclusivo e de qualidade. A Isabella é sensacional!",
       rating: 5
     },
     {
-      initials: "R.L.",
-      city: "Rio de Janeiro", 
-      text: "A Isabella é maravilhosa, conteúdo sensual e provocante. Adorei!",
+      name: "Rafael S.",
+      text: "Melhor investimento que fiz! Conteúdo sensual e provocante todos os dias.",
       rating: 5
     },
     {
-      initials: "A.M.",
-      city: "Belo Horizonte",
-      text: "Experiência única, muito íntima e especial. Vale cada centavo.",
+      name: "André L.",
+      text: "Experiência única, muito íntima e especial. Vale cada centavo mesmo!",
       rating: 5
     },
     {
-      initials: "C.F.",
-      city: "Brasília",
-      text: "Conteúdo de alta qualidade, muito sensual. Superou expectativas!",
+      name: "João P.",
+      text: "A Isabella é maravilhosa! Conteúdo de alta qualidade, superou expectativas.",
+      rating: 5
+    },
+    {
+      name: "Bruno F.",
+      text: "Chat privado é o melhor! Ela responde sempre e o conteúdo é incrível.",
+      rating: 5
+    },
+    {
+      name: "Diego R.",
+      text: "Grupo VIP vale muito a pena! Conteúdo exclusivo todos os dias.",
       rating: 5
     }
   ];
@@ -41,7 +47,7 @@ const TestimonialsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
             <div 
               key={index}
@@ -51,12 +57,12 @@ const TestimonialsSection = () => {
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-rose-baby to-gold-soft rounded-full flex items-center justify-center mr-4">
                   <span className="text-black font-bold text-sm">
-                    {testimonial.initials}
+                    {testimonial.name.charAt(0)}
                   </span>
                 </div>
                 <div>
                   <div className="text-rose-baby font-semibold">
-                    {testimonial.city}
+                    {testimonial.name}
                   </div>
                   <div className="flex text-gold-soft text-sm">
                     {[...Array(testimonial.rating)].map((_, i) => (

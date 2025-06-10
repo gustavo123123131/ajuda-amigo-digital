@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Package } from '../types';
+import { createPixPayment, checkPaymentStatus } from '../api/pushingpay';
 
 interface CheckoutModalProps {
   package: Package;
@@ -11,11 +12,11 @@ interface CheckoutModalProps {
 const CheckoutModal: React.FC<CheckoutModalProps> = ({ package: pkg, isOpen, onClose }) => {
   const [paymentStatus, setPaymentStatus] = useState<'waiting' | 'processing' | 'completed' | 'error'>('waiting');
   const [qrCodeData, setQrCodeData] = useState<string>('');
+  const [pixKey, setPixKey] = useState<string>('');
+  const [paymentId, setPaymentId] = useState<string>('');
 
   useEffect(() => {
     if (isOpen) {
-      // TODO: Integração com API da PushingPay
-      // Esta função deve ser implementada quando a API estiver disponível
       initializePayment();
     }
   }, [isOpen]);
@@ -24,48 +25,34 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ package: pkg, isOpen, onC
     try {
       setPaymentStatus('processing');
       
-      /*
-        TODO: INTEGRAÇÃO COM API DA PUSHINGPAY
-        
-        Implementar aqui a chamada para a API da PushingPay:
-        
-        1. Enviar dados do pacote para gerar pagamento Pix
-        2. Receber QR Code dinâmico
-        3. Configurar webhook para verificação de pagamento
-        4. Atualizar status em tempo real
-        
-        Exemplo de implementação futura:
-        
-        const response = await fetch('/api/create-payment', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            amount: pkg.price,
-            description: pkg.name,
-            packageId: pkg.id
-          })
-        });
-        
-        const data = await response.json();
-        setQrCodeData(data.qrCode);
-        
-        // Iniciar polling para verificar pagamento
-        const interval = setInterval(async () => {
-          const statusResponse = await fetch(`/api/check-payment/${data.paymentId}`);
-          const statusData = await statusResponse.json();
+      // Integração real com PushingPay
+      const payment = await createPixPayment({
+        amount: pkg.price,
+        description: `${pkg.name} - ${pkg.description}`,
+        customer_email: 'cliente@exemplo.com'
+      });
+      
+      setQrCodeData(payment.qr_code);
+      setPixKey(payment.pix_key);
+      setPaymentId(payment.id);
+      setPaymentStatus('waiting');
+      
+      // Iniciar polling para verificar pagamento
+      const interval = setInterval(async () => {
+        try {
+          const statusResponse = await checkPaymentStatus(payment.id);
           
-          if (statusData.status === 'paid') {
+          if (statusResponse.status === 'paid') {
             setPaymentStatus('completed');
             clearInterval(interval);
           }
-        }, 2000);
-      */
+        } catch (error) {
+          console.error('Erro ao verificar status:', error);
+        }
+      }, 3000);
       
-      // Simulação temporária para demonstração
-      setTimeout(() => {
-        setQrCodeData('QR_CODE_PLACEHOLDER');
-        setPaymentStatus('waiting');
-      }, 1500);
+      // Limpar interval após 10 minutos
+      setTimeout(() => clearInterval(interval), 600000);
       
     } catch (error) {
       console.error('Erro ao inicializar pagamento:', error);
@@ -125,18 +112,15 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ package: pkg, isOpen, onC
 
           {paymentStatus === 'waiting' && (
             <div className="py-4">
-              {/* 
-                TODO: ÁREA PARA RENDERIZAR QR CODE
-                Quando a API da PushingPay estiver integrada, 
-                substituir este placeholder pelo QR Code real
-              */}
-              <div className="w-48 h-48 bg-white rounded-xl mx-auto mb-4 flex items-center justify-center">
-                <div className="text-black text-center">
-                  <p className="text-xs mb-2">QR CODE PIX</p>
-                  <p className="text-xs">Será gerado aqui</p>
-                  <p className="text-xs">via PushingPay API</p>
+              {qrCodeData && (
+                <div className="mb-4">
+                  <img 
+                    src={qrCodeData} 
+                    alt="QR Code PIX" 
+                    className="w-48 h-48 mx-auto bg-white rounded-xl p-4"
+                  />
                 </div>
-              </div>
+              )}
               
               <p className="text-rose-baby font-semibold mb-2">
                 Escaneie o QR Code para pagar
@@ -145,13 +129,18 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ package: pkg, isOpen, onC
                 Pagamento via Pix • Aprovação instantânea
               </p>
               
-              <div className="bg-gray-800 rounded-lg p-3 mb-4">
-                <p className="text-xs text-gray-400 mb-1">Chave Pix (copiar):</p>
-                <p className="text-sm text-white font-mono break-all">
-                  {/* TODO: Substituir pela chave Pix real da API */}
-                  pix-key-placeholder@email.com
-                </p>
-              </div>
+              {pixKey && (
+                <div className="bg-gray-800 rounded-lg p-3 mb-4">
+                  <p className="text-xs text-gray-400 mb-1">Chave Pix (copiar):</p>
+                  <p className="text-sm text-white font-mono break-all">
+                    {pixKey}
+                  </p>
+                </div>
+              )}
+              
+              <p className="text-xs text-gray-500 mb-4">
+                Após o pagamento, você receberá o acesso no WhatsApp em até 5 minutos
+              </p>
             </div>
           )}
 
@@ -201,7 +190,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ package: pkg, isOpen, onC
         {/* Security Notice */}
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">
-            🔒 Pagamento seguro • Seus dados estão protegidos
+            🔒 Pagamento seguro via PushingPay • Seus dados estão protegidos
           </p>
         </div>
       </div>
